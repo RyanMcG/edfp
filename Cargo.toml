@@ -2,13 +2,6 @@
 name = "edfp2"
 version = "0.1.0"
 authors = ["ryan"]
-
-[dependencies]
-tempfile = "2.1.5"
-
-[package]
-# A short blurb about the package. This is not rendered in any format when
-# uploaded to crates.io (aka this is not markdown).
 description = "A visual-editor based command line tool for manipulating files."
 
 # These URLs point to more information about the repository. These are
@@ -37,3 +30,7 @@ categories = ["command-line-utilities", "filesystem", "text-editors"]
 # license identifiers from http://spdx.org/licenses/. Multiple licenses can be
 # separated with a `/`.
 license = "MIT"
+
+
+[dependencies]
+tempfile = "2.1.5"
