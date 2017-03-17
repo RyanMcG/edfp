@@ -1,5 +1,5 @@
 [package]
-name = "edfp2"
+name = "edfp"
 version = "0.1.0"
 authors = ["ryan"]
 description = "A visual-editor based command line tool for manipulating files."

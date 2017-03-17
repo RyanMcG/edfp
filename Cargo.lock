@@ -1,5 +1,5 @@
 [root]
-name = "edfp2"
+name = "edfp"
 version = "0.1.0"
 dependencies = [
  "tempfile 2.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
