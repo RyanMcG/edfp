@@ -4,6 +4,10 @@
 
 ---
 
+#### WIP
+
+Currently this program does not behave as described below.
+
 ## Usage
 
 ```bash
