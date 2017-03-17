@@ -50,6 +50,13 @@ x y
 
 You renamed *a* → *x* and *c* → *y* and deleted *b*. Good job!
 
+
+## Build
+
+```bash
+cargo build
+```
+
 ## License
 
 MIT. See [LICENSE][].
