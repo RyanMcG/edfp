@@ -4,8 +4,6 @@
 
 ---
 
-**WIP**
-
 ## Usage
 
 ```bash
@@ -50,7 +48,7 @@ $ ls
 x y
 ```
 
-You renamed a → x and c → y and deleted b. Good job!
+You renamed *a* → *x* and *c* → *y* and deleted *b*. Good job!
 
 ## License
 
