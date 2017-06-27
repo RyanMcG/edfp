@@ -10,12 +10,14 @@ extern crate tempfile;
 
 use tempfile::NamedTempFile;
 
+#[derive(Debug)]
 enum Operation {
     NoOp,
     Remove,
     Rename { new_path: PathBuf }
 }
 
+#[derive(Debug)]
 struct Change {
     path: PathBuf,
     operation: Operation
@@ -55,7 +57,20 @@ fn lookup_program() -> String {
 
 fn parse_lines(lines: (String, String)) -> Change {
     let (given, new) = lines;
-    Change { operation: Operation::NoOp, path: PathBuf::from(given) }
+    let path = PathBuf::from(&given);
+    let empty_string = String::new();
+    if new == given {
+        Change { operation: Operation::NoOp, path }
+    } else if new == String::new() {
+        Change { operation: Operation::Remove, path }
+    } else {
+        Change {
+            operation: Operation::Rename {
+                new_path: PathBuf::from(new)
+            },
+            path
+        }
+    }
 }
 
 fn describe_modifying_changes<O: io::Write>(header: &str, changes: &Vec<&Change>, mut output: O) -> O {
