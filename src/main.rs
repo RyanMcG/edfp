@@ -96,7 +96,7 @@ fn edfp<I: io::Read, O: io::Write>(mut input: I, mut output: O) {
     input.read_to_string(&mut buf).expect("Failed to read input");
 
     let mut tmp: NamedTempFile = NamedTempFile::new().expect("failed to create temporary file");
-    tmp.write_all(buf.as_bytes()).expect("Could not write to tempfile");
+    tmp.write_all(&buf.as_bytes()).expect("Could not write to tempfile");
 
     let editor_program = lookup_program();
     let tmp_path_str = tmp.path().to_str().expect("failed to parse tmp path");
