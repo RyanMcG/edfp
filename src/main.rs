@@ -1,6 +1,6 @@
 use std::env;
 use std::fmt;
-use std::fs::{File, rename, remove_file};
+use std::fs::{OpenOptions, File, rename, remove_file};
 use std::io::{BufRead, Write};
 use std::io;
 use std::path::PathBuf;
@@ -47,6 +47,9 @@ impl fmt::Display for Change {
     }
 }
 
+pub fn get_tty() -> io::Result<File> {
+    OpenOptions::new().read(true).write(true).open("/dev/tty")
+}
 
 fn lookup_program() -> String {
     match env::var_os("VISUAL") {
@@ -79,11 +82,12 @@ fn describe_modifying_changes<O: io::Write>(header: &str, changes: &Vec<&Change>
         for change in changes {
             writeln!(output, "\t{}", change);
         }
+        writeln!(output);
     }
     output
 }
 
-fn describe_changes<O: io::Write>(changes: &Vec<Change>, mut output: O) {
+fn describe_changes<O: io::Write>(changes: &Vec<Change>, mut output: O) -> bool {
     let removals: Vec<&Change> = changes.iter().filter(|c| match c.operation {
         Operation::Remove => true,
         _ => false
@@ -94,16 +98,22 @@ fn describe_changes<O: io::Write>(changes: &Vec<Change>, mut output: O) {
     }).collect();
 
     if renamings.is_empty() && removals.is_empty() {
-        writeln!(output, "No changes.");
+        writeln!(output, "No changes");
+        false
+    } else {
+        let output = describe_modifying_changes("DELETE the following files:\n", &removals, output);
+        describe_modifying_changes("RENAME the following files:\n", &renamings, output);
+        true
     }
-
-    let output = describe_modifying_changes("Remove/delete the following files:", &removals, output);
-    describe_modifying_changes("Rename/move the following files:", &renamings, output);
 }
 
 
-fn user_approves_changes<I: io::Read>(mut input: I) -> bool {
-    true
+fn user_approves_changes() -> bool {
+    let mut input = String::new();
+    let tty: File = get_tty().ok().expect("failed to open tty");
+    write!(&tty, "Would you like to make the changes described above (y/n)? ");
+    io::BufReader::new(tty).read_line(&mut input).ok().expect("failed to read user input");
+    input.to_lowercase().starts_with("y")
 }
 
 fn edfp<I: io::Read, O: io::Write>(mut input: I, mut output: O) {
@@ -133,9 +143,9 @@ fn edfp<I: io::Read, O: io::Write>(mut input: I, mut output: O) {
         .map(|line| line.ok().expect("failed to read line from commands file"));
     let changes: Vec<Change> = buf.lines().map(String::from).zip(commands).map(parse_lines).collect();
 
-    describe_changes(&changes, output);
+    let any_changes: bool = describe_changes(&changes, output);
 
-    if user_approves_changes(input) {
+    if any_changes && user_approves_changes() {
         for change in changes {
             change.operate().ok().expect("failed to change")
         }
