@@ -6,7 +6,7 @@
 
 #### WIP
 
-Currently this program does not behave as described below.
+Currently this program *does* behave as described below, but maybe not as you would expect in all cases.
 
 ## Usage
 
