@@ -29,7 +29,7 @@ $ ls
 a b c
 $ ls | edfp
 ```
-VISUAL will be opened with each line representing a file path:
+Your `VISUAL` (or `EDITOR` if unset) program of choice will be opened with each line representing a file path:
 
 ```
 a
@@ -45,7 +45,22 @@ x
 y
 ```
 
-Write and quit your editor, then try `ls` again.
+Write and quit your editor. You'll be prompted like so:
+
+```
+DELETE the following files:
+
+        b
+
+RENAME the following files:
+
+        a → x
+        c → y
+
+Would you like to make the changes described above (y/n)?
+```
+
+Type `y` and hit enter!
 
 ```bash
 $ ls
